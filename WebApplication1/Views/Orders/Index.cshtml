@@ -1,0 +1,71 @@
+﻿@model IEnumerable<WebApplication1.Models.Order>
+
+@{
+	ViewData["Title"] = "Orders";
+}
+
+<h1>Orders</h1>
+
+<p>
+	<button onclick="location.href = '@(Url.Action("Create", "Orders"))'">Create New</button>
+</p>
+
+<form asp-action="Index" method="get">
+	<div class="form-actions no-color">
+		<p>
+			Find by Number: <select multiple name="NumberSelectParms" asp-items="ViewBag.NumberSelectParms" class="form-control"></select>
+			Date1: <input name="DateSelectParm1" type="date" value="@ViewBag.DateSelectParm1" class="form-control" />
+			Date2: <input name="DateSelectParm2" type="date" value="@ViewBag.DateSelectParm2" class="form-control" />
+			Find by Provider: <select multiple name="ProviderSelectParms" asp-items="ViewBag.ProviderSelectParms" class="form-control"></select>
+			<input type="submit" value="Search" class="btn btn-primary" /> |
+			<a asp-action="Index">Back to Full List</a>
+		</p>
+	</div>
+</form>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th style='display: none;'>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]">@Html.DisplayNameFor(model => model.Id)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["NumberSortParm"]">@Html.DisplayNameFor(model => model.Number)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.Date)</a>
+			</th>
+			<th>
+				<a asp-action="Index" asp-route-sortOrder="@ViewData["ProviderSortParm"]">@Html.DisplayNameFor(model => model.Provider)</a>
+			</th>
+			@*<th></th>*@
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+
+			<tr onclick="location.href = '@(Url.Action("Details", "Orders", new { Id = item.Id }))'">
+
+				<td style='display: none;'>
+					@Html.DisplayFor(modelItem => item.Id)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Number)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Date)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Provider.Name)
+				</td>
+				@*				<td>
+			<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+			<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+			<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+			</td>*@
+			</tr>
+
+		}
+	</tbody>
+</table>

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<WebApplication1.Models.OrderItem>
+
+@{
+    ViewData["Title"] = "OrderItems";
+}
+
+<h1>OrderItems</h1>
+
+<p>
+    <button onclick="location.href = '@(Url.Action("Create", "OrderItems"))'">Create New</button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Name)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["QuantitySortParm"]">@Html.DisplayNameFor(model => model.Quantity)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["UnitSortParm"]">@Html.DisplayNameFor(model => model.Unit)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["OrderSortParm"]">@Html.DisplayNameFor(model => model.Order)</a>
+            </th>
+            @*<th></th>*@
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+            <tr onclick="location.href = '@(Url.Action("Details", "OrderItems", new { Id = item.Id }))'">
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Unit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Order.Number)
+            </td>
+@*            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>*@
+        </tr>
+}
+    </tbody>
+</table>
