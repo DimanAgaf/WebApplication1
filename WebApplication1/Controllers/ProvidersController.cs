@@ -60,9 +60,17 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(provider);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+				var filter = await _context.Providers.FirstOrDefaultAsync(x => x.Name == provider.Name);
+				if (filter?.Name == provider.Name)
+				{
+                    ModelState.AddModelError(nameof(provider.Name), "Name must be unique");
+                }
+                else
+                {
+                    _context.Add(provider);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(provider);
         }
@@ -97,23 +105,31 @@ namespace WebApplication1.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+				var filter = await _context.Providers.FirstOrDefaultAsync(x => x.Name == provider.Name);
+                if (filter?.Name == provider.Name)
                 {
-                    _context.Update(provider);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError(nameof(provider.Name), "Name must be unique");
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!ProviderExists(provider.Id))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(provider);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!ProviderExists(provider.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(provider);
         }
